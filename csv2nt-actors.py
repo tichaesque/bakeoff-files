@@ -1,4 +1,5 @@
 import string
+import re
 
 outFile = open('actors.nt', 'w')
 
@@ -9,9 +10,13 @@ def writeToFile():
     for line in file('actors.csv', 'r'):
         if count > 0:
             linearray = line.split(',')
-            actorname =  linearray[0]
-            actorid = linearray[1]
-            title = linearray[2][:-2]
+            if len(linearray) > 3 and linearray[0][0] == "\"":
+                actorid =  linearray[2]
+                actorname = linearray[0] + linearray[1]
+                actorname = actorname[1:-1]
+            else:
+                actorid =  linearray[1]
+                actorname = linearray[0]
 
             outFile.write("<http://data.linkedmdb.org/resource/actor/" + actorid + ">" +
                 " <http://data.linkedmdb.org/resource/movie/actor_name> " +
@@ -24,9 +29,15 @@ def writeToFile():
     for line in file('actors.csv', 'r'):
         if count > 0:
             linearray = line.split(',')
-            actorname =  linearray[0]
-            actorid = linearray[1]
-            title = linearray[2][:-2]
+            if len(linearray) > 3 and linearray[len(linearray)-1][-1:] == "\"":
+                actorid =  linearray[1]
+                title = linearray[2] + linearray[3][:-2]
+            elif len(linearray) > 3 and linearray[0][0] == "\"":
+                actorid =  linearray[2]
+                title =  linearray[3]
+            else:
+                actorid =  linearray[1]
+                title = linearray[2][:-2]
 
             outFile.write("<http://data.linkedmdb.org/resource/actor/" + actorid + ">" +
                 " <http://data.linkedmdb.org/resource/movie/performance> " +
